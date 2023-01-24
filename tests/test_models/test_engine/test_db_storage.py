@@ -44,7 +44,24 @@ class TestDBStorageDocs(unittest.TestCase):
 test_db_storage.py'])
         self.assertEqual(result.total_errors, 0,
                          "Found code style errors (and warnings).")
+  @unittest.skip("Not Neccessary")
+      def test_pep8_conformance_db_storage(self):
+          """Test that models/engine/db_storage.py conforms to PEP8."""
+          pep8s = pep8.StyleGuide(quiet=True)
+          result = pep8s.check_files(['models/engine/db_storage.py'])
+          self.assertEqual(result.total_errors, 0,
+                           "Found code style errors (and warnings).")
 
+  @unittest.skip("Not Neccessary")
+  def test_pep8_conformance_test_db_storage(self):
+      """Test tests/test_models/test_db_storage.py conforms to PEP8."""
+      pep8s = pep8.StyleGuide(quiet=True)
+      result = pep8s.check_files(['tests/test_models/test_engine/\
+test_db_storage.py'])
+      self.assertEqual(result.total_errors, 0,
+
+                       "Found code style errors (and warnings).")
+                                                                                      
     def test_db_storage_module_docstring(self):
         """Test for the db_storage.py module docstring"""
         self.assertIsNot(db_storage.__doc__, None,
@@ -86,3 +103,24 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+@unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_get(self):
+        """Check if get return an object."""
+        storage = DBStorage()
+        user = User(name="Max")
+        user_id = user.id
+        user.save()
+        self.assertEqual(user, storage.get(User, user_id))  
+@unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+   def test_count_with_arg(self):
+       """Check if the count with argument return the correct output."""
+       storage = DBStorage()
+       users = storage.all(User)
+       self.assertEqual(len(users), storage.count(User))     
+@unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+  def test_count_without_arg(self):
+      """Check if the count without argument return the correct output."""
+      storage = DBStorage()
+      objs = storage.all()
+      self.assertEqual(len(objs), storage.count())
+      
